@@ -1,6 +1,8 @@
 package seg3102.wellmeadowsrestapi.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.hateoas.CollectionModel
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -68,7 +70,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
     @GetMapping("/patients/{id}/contact")
     fun getPatientContactById(@PathVariable("id") id: Long): ResponseEntity<PatientContactRepresentation> {
         return patientRepository.findById(id)
-            .map { patient: Patient ->  patientContactAssembler.toModel(patient.patientContact)}
+            .map { patient: Patient ->  patientContactAssembler.toModel(patient.patientContact!!)}
             .map { body: PatientContactRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
     }
@@ -77,7 +79,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
     @GetMapping("/patients/{id}/divisionFile")
     fun getPatientDivisionFileById(@PathVariable("id") id: Long): ResponseEntity<DivisionAdmissionFileRepresentation> {
         return patientRepository.findById(id)
-            .map { patient: Patient ->  divisionFileAssembler.toModel(patient.divisionAdmissionFile)}
+            .map { patient: Patient ->  divisionFileAssembler.toModel(patient.divisionAdmissionFile!!)}
             .map { body: DivisionAdmissionFileRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
     }
@@ -86,7 +88,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
     @GetMapping("/patients/{id}/hospitalFile")
     fun getPatientHospitalFileById(@PathVariable("id") id: Long): ResponseEntity<HospitalAdmissionFileRepresentation> {
         return patientRepository.findById(id)
-            .map { patient: Patient ->  hospitalFileAssembler.toModel(patient.hospitalAdmissionFile)}
+            .map { patient: Patient ->  hospitalFileAssembler.toModel(patient.hospitalAdmissionFile!!)}
             .map { body: HospitalAdmissionFileRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
     }
@@ -98,6 +100,15 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
             .map { entity: Patient -> patientAssembler.toModel(entity) }
             .map { body: PatientRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
+    }
+
+    @Operation(summary = "Get all Patients")
+    @GetMapping("/patients")
+    fun getPatients(): ResponseEntity<CollectionModel<PatientRepresentation>> {
+        val patients = patientRepository.findAll()
+        return ResponseEntity(
+            patientAssembler.toCollectionModel(patients),
+            HttpStatus.OK)
     }
 
     @Operation(summary = "Get all Patients for a Doctor")
@@ -113,7 +124,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
     @GetMapping("/patients/{id}/doctor")
     fun getPatientDoctorById(@PathVariable("id") id: Long): ResponseEntity<DoctorRepresentation> {
         return patientRepository.findById(id)
-            .map { patient: Patient ->  doctorAssembler.toModel(patient.doctor)}
+            .map { patient: Patient ->  doctorAssembler.toModel(patient.doctor!!)}
             .map { body: DoctorRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
     }
@@ -122,7 +133,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
     @GetMapping("/patients/{id}/division")
     fun getPatientDivisionById(@PathVariable("id") id: Long): ResponseEntity<DivisionRepresentation> {
         return patientRepository.findById(id)
-            .map { patient: Patient ->  divisionAssembler.toModel(patient.division)}
+            .map { patient: Patient ->  divisionAssembler.toModel(patient.division!!)}
             .map { body: DivisionRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
     }

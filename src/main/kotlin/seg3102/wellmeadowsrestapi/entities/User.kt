@@ -16,11 +16,17 @@ open class User {
     open var lastName: String        = ""
     open var email: String           = ""
     open var phoneNumber: String     = ""
+
+    constructor() {}
+    constructor(fName: String) { this.firstName = fName }
 }
 
 @Entity
-class Doctor() : User() {
+class Doctor : User {
     var phoneExtension: String = ""
+
+    constructor() : super() {}
+    constructor(fName: String) : super(fName) {}
 
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "doctor")
     var hospitalAdmissionFiles: MutableList<HospitalAdmissionFile> = ArrayList()
@@ -39,11 +45,13 @@ class Doctor() : User() {
 }
 
 @Entity
-class Nurse() : User() {
+class Nurse : User {
     var phoneExtension: String = ""
 
-    @OneToOne
-    @MapsId
+    constructor() : super() {}
+    constructor(fName: String) : super(fName) {}
+
+    @OneToOne(optional = true)
     @JoinColumn(name = "division_id")
     @JsonManagedReference
     var division: Division = Division()

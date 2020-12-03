@@ -15,6 +15,9 @@ class Division {
     var phoneExtension: String  = ""
     var status: String          = ""
 
+    constructor() {}
+    constructor(name: String) { this.divisionName = name }
+
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "division")
     var patients: MutableList<Patient> = ArrayList()
 
