@@ -1,0 +1,9 @@
+package seg3102.wellmeadowsrestapi.repository
+
+import seg3102.wellmeadowsrestapi.entities.HospitalAdmissionFile
+import seg3102.wellmeadowsrestapi.entities.DivisionAdmissionFile
+import org.springframework.data.repository.CrudRepository
+
+interface HospitalFileRepository: CrudRepository<HospitalAdmissionFile, Long>
+
+interface DivisionFileRepository: CrudRepository<DivisionAdmissionFile, Long>
