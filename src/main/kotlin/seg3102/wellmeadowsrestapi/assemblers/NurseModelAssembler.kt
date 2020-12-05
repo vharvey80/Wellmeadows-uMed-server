@@ -25,8 +25,31 @@ class NurseModelAssembler: RepresentationModelAssemblerSupport<Nurse, NurseRepre
                 .getNurseDivisionById(entity.userId))
             .withRel("division"))
 
+        nurseRepresentation.division = entity.division?.let { divisionRepresentation(it) }!!
+
         nurseRepresentation.phoneExtension = entity.phoneExtension
 
+        nurseRepresentation.userId = entity.userId
+        nurseRepresentation.firstName = entity.firstName
+        nurseRepresentation.lastName = entity.lastName
+        nurseRepresentation.email = entity.email
+        nurseRepresentation.password = entity.password
+        nurseRepresentation.phoneNumber = entity.phoneNumber
+
         return nurseRepresentation
+    }
+
+    private fun divisionRepresentation(division: Division): DivisionRepresentation {
+        val representation = DivisionRepresentation()
+
+        representation.divisionId = division.divisionId
+        representation.divisionName = division.divisionName
+        representation.location = division.location
+        representation.numberOfBeds = division.numberOfBeds
+
+        return representation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getDivisionById(division.divisionId))
+            .withSelfRel())
     }
 }

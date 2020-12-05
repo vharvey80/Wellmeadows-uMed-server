@@ -21,7 +21,7 @@ class PatientRepresentation: RepresentationModel<PatientRepresentation>() {
     var hospitalFile: HospitalAdmissionFileRepresentation = HospitalAdmissionFileRepresentation()
     var doctor: UserNameRepresentation = UserNameRepresentation()
     var division: DivisionNameRepresentation = DivisionNameRepresentation()
-    var prescriptions: List<PrescriptionNameRepresentation> = ArrayList<PrescriptionNameRepresentation>()
+    var prescriptions: List<PrescriptionNameRepresentation> = ArrayList()
 }
 
 @Relation(collectionRelation = "patientContacts")
@@ -30,6 +30,8 @@ class PatientContactRepresentation: RepresentationModel<PatientContactRepresenta
     var firstName: String = ""
     var lastName: String = ""
     var relationship: String = ""
+
+    var patient: PatientNameRepresentation = PatientNameRepresentation()
 }
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

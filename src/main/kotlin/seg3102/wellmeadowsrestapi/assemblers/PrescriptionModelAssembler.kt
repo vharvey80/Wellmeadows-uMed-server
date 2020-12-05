@@ -19,8 +19,8 @@ class PrescriptionModelAssembler: RepresentationModelAssemblerSupport<Prescripti
                 .getPrescriptionById(entity.medicationId))
             .withSelfRel())
 
-        prescriptionRepresentation.patients = toPatientsRepresentation(entity.patients)
-        prescriptionRepresentation.doctors = toDoctorsRepresentation(entity.doctors)
+        prescriptionRepresentation.doctor = doctorRepresentation(entity.doctor)
+        prescriptionRepresentation.patient = patientRepresentation(entity.patient)
 
         prescriptionRepresentation.medicationId = entity.medicationId
         prescriptionRepresentation.medicationName = entity.medicationName
@@ -29,20 +29,6 @@ class PrescriptionModelAssembler: RepresentationModelAssemblerSupport<Prescripti
         prescriptionRepresentation.unitsByDay = entity.unitsByDay
 
         return prescriptionRepresentation
-    }
-
-    private fun toPatientsRepresentation(patients: List<Patient>): List<PatientNameRepresentation> {
-        return if (patients.isEmpty()) Collections.emptyList() else patients
-            .map{
-                patientRepresentation(it)
-            }
-    }
-
-    private fun toDoctorsRepresentation(doctors: List<Doctor>): List<UserNameRepresentation> {
-        return if (doctors.isEmpty()) Collections.emptyList() else doctors
-            .map{
-                doctorRepresentation(it)
-            }
     }
 
     private fun patientRepresentation(patient: Patient): PatientNameRepresentation {

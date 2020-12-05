@@ -2,8 +2,13 @@ package seg3102.wellmeadowsrestapi.entities
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import java.time.LocalDateTime
 import javax.persistence.*
 import javax.validation.constraints.*
+import javax.persistence.FetchType
+
+
+
 
 @Entity
 class Prescription {
@@ -15,11 +20,20 @@ class Prescription {
     var methodOfAdmin: String   = ""
     var startDate: String       = ""
 
-    @ManyToMany
-    @JsonIgnoreProperties("prescriptions")
-    var patients: MutableList<Patient> = ArrayList()
+    constructor() {}
+    constructor(name: String, unitsByDay: Int, method: String) {
+        this.medicationName = name
+        this.unitsByDay = unitsByDay
+        this.methodOfAdmin = method
+        this.startDate = LocalDateTime.now().toString()
+    }
 
-    @ManyToMany
-    @JsonIgnoreProperties("prescriptions")
-    var doctors: MutableList<Doctor> = ArrayList()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")
+    var doctor: Doctor = Doctor()
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("patientId")
+    var patient: Patient = Patient()
+
 }

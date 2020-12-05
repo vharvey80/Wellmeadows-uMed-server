@@ -21,10 +21,29 @@ class PatientContactModelAssembler: RepresentationModelAssemblerSupport<PatientC
                 .getPatientContactById(entity.contactId))
             .withSelfRel())
 
+        contactRepresentation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getContactPatientById(entity.contactId))
+            .withRel("patient"))
+
+        contactRepresentation.patient = patientRepresentation(entity.patient!!)
+
         contactRepresentation.firstName = entity.firstName
         contactRepresentation.lastName = entity.lastName
         contactRepresentation.relationship = entity.relationship
 
         return contactRepresentation
+    }
+
+    private fun patientRepresentation(patient: Patient): PatientNameRepresentation {
+        val representation = PatientNameRepresentation()
+
+        representation.firstName = patient.firstName
+        representation.lastName = patient.firstName
+
+        return representation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getPatientById(patient.patientId))
+            .withSelfRel())
     }
 }

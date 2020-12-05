@@ -29,6 +29,16 @@ class DivisionModelAssembler: RepresentationModelAssemblerSupport<Division, Divi
                 .getDivisionAdmissionFilesById(entity.divisionId))
             .withRel("divisionAdmissionFiles"))
 
+        divisionRepresentation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getDivisionNurseById(entity.divisionId))
+            .withRel("nurse"))
+
+        divisionRepresentation.chiefNurse = nurseRepresentation(entity.nurse!!)
+
+        divisionRepresentation.patients = toPatientsRepresentation(entity.patients)
+        divisionRepresentation.divisionFiles = toFilesRepresentation(entity.divisionAdmissionFiles)
+
         divisionRepresentation.divisionId = entity.divisionId
         divisionRepresentation.divisionName = entity.divisionName
         divisionRepresentation.location = entity.location
@@ -51,6 +61,18 @@ class DivisionModelAssembler: RepresentationModelAssemblerSupport<Division, Divi
             .map{
                 filesRepresentation(it)
             }
+    }
+
+    private fun nurseRepresentation(nurse: Nurse): UserNameRepresentation {
+        val representation = UserNameRepresentation()
+
+        representation.firstName = nurse.firstName
+        representation.lastName = nurse.lastName
+
+        return representation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getNurseById(nurse.userId))
+            .withSelfRel())
     }
 
     private fun patientRepresentation(patient: Patient): PatientNameRepresentation {

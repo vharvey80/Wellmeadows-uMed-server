@@ -34,7 +34,7 @@ class PatientModelAssembler: RepresentationModelAssemblerSupport<Patient, Patien
                 .getPatientHospitalFileById(entity.patientId))
             .withRel("hospitalAdmissionFile"))
 
-        patientRepresentation.add(WebMvcLinkBuilder.linkTo(
+        /*patientRepresentation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getPatientDoctorById(entity.patientId))
             .withRel("doctor"))
@@ -42,7 +42,14 @@ class PatientModelAssembler: RepresentationModelAssemblerSupport<Patient, Patien
         patientRepresentation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getPatientDivisionById(entity.patientId))
-            .withRel("division"))
+            .withRel("division"))*/
+
+        patientRepresentation.patientContact = contactRepresentation(entity.patientContact)
+        patientRepresentation.divisionFile = divisionFileRepresentation(entity.divisionAdmissionFile!!)
+        patientRepresentation.hospitalFile = hospitalFileRepresentation(entity.hospitalAdmissionFile!!)
+
+        //patientRepresentation.doctor = doctorRepresentation(entity.doctor)
+        //patientRepresentation.division = divisionRepresentation(entity.division)
 
         patientRepresentation.prescriptions = toPrescriptionsRepresentation(entity.prescriptions)
 
@@ -74,6 +81,69 @@ class PatientModelAssembler: RepresentationModelAssemblerSupport<Patient, Patien
         return representation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getPrescriptionById(prescription.medicationId))
+            .withSelfRel())
+    }
+
+    private fun contactRepresentation(contact: PatientContact): PatientContactRepresentation {
+        val representation = PatientContactRepresentation()
+
+        representation.firstName = contact.firstName
+        representation.lastName = contact.lastName
+        representation.relationship = contact.relationship
+
+        return representation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getPatientContactById(contact.contactId))
+            .withSelfRel())
+    }
+
+    private fun divisionFileRepresentation(divisionFile: DivisionAdmissionFile): DivisionAdmissionFileRepresentation {
+        val representation = DivisionAdmissionFileRepresentation()
+
+        representation.divisionFileId = divisionFile.divisionFileId
+        representation.requestRationale = divisionFile.requestRationale
+        representation.priority = divisionFile.priority
+
+        return representation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getDivisionFileById(divisionFile.divisionFileId))
+            .withSelfRel())
+    }
+
+    private fun hospitalFileRepresentation(hospitalFile: HospitalAdmissionFile): HospitalAdmissionFileRepresentation {
+        val representation = HospitalAdmissionFileRepresentation()
+
+        representation.hospitalFileId = hospitalFile.hospitalFileId
+        representation.bedNumber = hospitalFile.bedNumber
+        representation.privateInsuranceNumber = hospitalFile.privateInsuranceNumber
+
+        return representation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getHospitalFileById(hospitalFile.hospitalFileId))
+            .withSelfRel())
+    }
+
+    private fun doctorRepresentation(doctor: Doctor): UserNameRepresentation {
+        val representation = UserNameRepresentation()
+
+        representation.firstName = doctor.firstName
+        representation.lastName = doctor.lastName
+
+        return representation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getDoctorById(doctor.userId))
+            .withSelfRel())
+    }
+
+    private fun divisionRepresentation(division: Division): DivisionNameRepresentation {
+        val representation = DivisionNameRepresentation()
+
+        representation.divisionName = division.divisionName
+        representation.location = division.location
+
+        return representation.add(WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+                .getDivisionById(division.divisionId))
             .withSelfRel())
     }
 }

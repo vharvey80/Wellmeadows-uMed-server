@@ -1,9 +1,8 @@
 package seg3102.wellmeadowsrestapi.entities
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.sun.istack.Nullable
 import javax.persistence.*
-import javax.print.Doc
 
 @Entity
 class Patient {
@@ -18,42 +17,45 @@ class Patient {
     var gender: String          = ""
     var maritalStatus: String   = ""
 
-    constructor(fName: String,
-                lName: String,
-                g: String) {
+    constructor()
+    constructor(fName: String, lName: String, gender: String, dateOfBirth: String, status: String, contact: PatientContact) {
         this.firstName = fName
         this.lastName = lName
-        this.gender = g
+        this.dateOfBirth = dateOfBirth
+        this.maritalStatus = status
+        this.gender = gender
+
+        this.patientContact = contact
     }
 
-    @OneToOne(optional = true)
-    @JoinColumn(name = "contact_id")
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "contact_id", referencedColumnName = "contactId")
     @JsonManagedReference
-    var patientContact: PatientContact? = null
+    var patientContact: PatientContact = PatientContact()
 
-    @OneToOne(optional = true)
-    @JoinColumn(name = "division_file_id")
+    @OneToOne
+    @JoinColumn(name = "division_file_id", referencedColumnName = "divisionFileId")
     @JsonManagedReference
     var divisionAdmissionFile: DivisionAdmissionFile? = null
 
-    @OneToOne(optional = true)
-    @JoinColumn(name = "hospital_file_id")
+    @OneToOne
+    @JoinColumn(name = "hospital_file_id", referencedColumnName = "hospitalFileId")
     @JsonManagedReference
     var hospitalAdmissionFile: HospitalAdmissionFile? = null
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "doctor_id")
-    var doctor: Doctor? = null
+    @OneToMany(mappedBy = "patient")
+    var prescriptions: MutableList<Prescription> = ArrayList()
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "division_id")
+    @Nullable
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @MapsId("divisionId")
     var division: Division? = null
 
-    @ManyToMany(cascade = [CascadeType.ALL],
-                fetch = FetchType.LAZY,
-                mappedBy = "patients")
-    @JsonIgnoreProperties("patients")
-    var prescriptions: MutableList<Prescription> = ArrayList()
+
+    @Nullable
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @MapsId("userId")
+    var doctor: Doctor = Doctor()
 }
 
 @Entity
@@ -66,4 +68,14 @@ class PatientContact {
     var relationship: String    = ""
     var address: String         = ""
     var phoneNumber: String     = ""
+
+    constructor()
+    constructor(fName: String, lName: String, rel: String) {
+        this.firstName = fName
+        this.lastName = lName
+        this.relationship = rel
+    }
+
+    @OneToOne
+    var patient: Patient? = null
 }

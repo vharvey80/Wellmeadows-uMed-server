@@ -26,14 +26,10 @@ class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRe
 
         doctorRepresentation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFilesById(entity.userId))
-            .withRel("divisionFiles"))
+                .getPrescriptionsById(entity.userId))
+            .withRel("prescriptions"))
 
-        doctorRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getHospitalFilesById(entity.userId))
-            .withRel("hospitalFiles"))
-
+        doctorRepresentation.patients = toPatientsRepresentation(entity.patients)
         doctorRepresentation.prescriptions = toPrescriptionsRepresentation(entity.prescriptions)
 
         doctorRepresentation.phoneExtension = entity.phoneExtension
@@ -46,20 +42,6 @@ class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRe
         doctorRepresentation.phoneNumber = entity.phoneNumber
 
         return doctorRepresentation
-    }
-
-    fun toDivisionFilesRepresentation(divisionFiles: List<DivisionAdmissionFile>): List<DivisionAdmissionFileRepresentation> {
-        return if (divisionFiles.isEmpty()) Collections.emptyList() else divisionFiles
-            .map{
-                divisionFileRepresentation(it)
-            }
-    }
-
-    fun toHospitalFilesRepresentation(hospitalFiles: List<HospitalAdmissionFile>): List<HospitalAdmissionFileRepresentation> {
-        return if (hospitalFiles.isEmpty()) Collections.emptyList() else hospitalFiles
-            .map{
-                hospitalFileRepresentation(it)
-            }
     }
 
     fun toPatientsRepresentation(patients: List<Patient>): List<PatientNameRepresentation> {
@@ -97,32 +79,6 @@ class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRe
         return representation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getPrescriptionById(prescription.medicationId))
-            .withSelfRel())
-    }
-
-    private fun divisionFileRepresentation(divisionFile: DivisionAdmissionFile): DivisionAdmissionFileRepresentation {
-        val representation = DivisionAdmissionFileRepresentation()
-
-        representation.divisionFileId = divisionFile.divisionFileId
-        representation.requestRationale = divisionFile.requestRationale
-        representation.priority = divisionFile.priority
-
-        return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFilesById(divisionFile.divisionFileId))
-            .withSelfRel())
-    }
-
-    private fun hospitalFileRepresentation(hospitalFile: HospitalAdmissionFile): HospitalAdmissionFileRepresentation {
-        val representation = HospitalAdmissionFileRepresentation()
-
-        representation.hospitalFileId = hospitalFile.hospitalFileId
-        representation.privateInsuranceNumber = hospitalFile.privateInsuranceNumber
-        representation.bedNumber = hospitalFile.bedNumber
-
-        return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getHospitalFileById(hospitalFile.hospitalFileId))
             .withSelfRel())
     }
 }

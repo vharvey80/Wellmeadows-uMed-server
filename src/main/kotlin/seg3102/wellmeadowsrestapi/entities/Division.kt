@@ -1,6 +1,7 @@
 package seg3102.wellmeadowsrestapi.entities
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.engine.internal.Cascade
 import javax.persistence.*
 import javax.validation.constraints.*
 
@@ -16,11 +17,21 @@ class Division {
     var status: String          = ""
 
     constructor() {}
-    constructor(name: String) { this.divisionName = name }
+    constructor(name: String, location: String, numberOfBeds: Int, status: String, nurse: Nurse) {
+        this.divisionName = name
+        this.location = location
+        this.numberOfBeds = numberOfBeds
+        this.status = status
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "division")
+        this.nurse = nurse
+    }
+
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "division")
     var patients: MutableList<Patient> = ArrayList()
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "division")
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "division")
     var divisionAdmissionFiles: MutableList<DivisionAdmissionFile> = ArrayList()
+
+    @OneToOne(mappedBy = "division")
+    var nurse: Nurse? = Nurse()
 }

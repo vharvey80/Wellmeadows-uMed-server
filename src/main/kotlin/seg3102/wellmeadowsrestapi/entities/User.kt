@@ -18,7 +18,12 @@ open class User {
     open var phoneNumber: String     = ""
 
     constructor() {}
-    constructor(fName: String) { this.firstName = fName }
+    constructor(fName: String, lName: String, pWord: String, email: String) {
+        this.firstName = fName
+        this.lastName = lName
+        this.password = pWord
+        this.email = email
+    }
 }
 
 @Entity
@@ -26,21 +31,15 @@ class Doctor : User {
     var phoneExtension: String = ""
 
     constructor() : super() {}
-    constructor(fName: String) : super(fName) {}
+    constructor(fName: String, lName: String, pWord: String, email: String, pExtension: String) :
+            super(fName, lName, pWord, email) {
+        this.phoneExtension = pExtension
+    }
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "doctor")
-    var hospitalAdmissionFiles: MutableList<HospitalAdmissionFile> = ArrayList()
-
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "doctor")
-    var divisionAdmissionFiles: MutableList<DivisionAdmissionFile> = ArrayList()
-
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "doctor")
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "doctor")
     var patients: MutableList<Patient> = ArrayList()
 
-    @ManyToMany(cascade = [CascadeType.ALL],
-                fetch = FetchType.LAZY,
-                mappedBy = "doctors")
-    @JsonIgnoreProperties("doctors")
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "doctor")
     var prescriptions: MutableList<Prescription> = ArrayList()
 }
 
@@ -49,10 +48,11 @@ class Nurse : User {
     var phoneExtension: String = ""
 
     constructor() : super() {}
-    constructor(fName: String) : super(fName) {}
+    constructor(fName: String, lName: String, pWord: String, email: String, pExtension: String) : super(fName, lName, pWord, email) {
+        this.phoneExtension = pExtension
+    }
 
-    @OneToOne(optional = true)
-    @JoinColumn(name = "division_id")
-    @JsonManagedReference
-    var division: Division = Division()
+    @OneToOne(cascade = [CascadeType.ALL])
+    @MapsId
+    var division: Division? = null
 }
