@@ -15,8 +15,6 @@ class DivisionRepresentation: RepresentationModel<DivisionRepresentation>() {
 
     var patients : List<PatientNameRepresentation> = ArrayList<PatientNameRepresentation>()
     var divisionFiles: List<DivisionAdmissionFileRepresentation> = ArrayList<DivisionAdmissionFileRepresentation>()
-
-    var chiefNurse: UserNameRepresentation = UserNameRepresentation()
 }
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

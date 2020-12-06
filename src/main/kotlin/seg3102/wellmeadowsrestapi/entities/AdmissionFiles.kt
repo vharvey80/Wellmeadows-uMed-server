@@ -1,8 +1,6 @@
 package seg3102.wellmeadowsrestapi.entities
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 @Entity
 class HospitalAdmissionFile {
@@ -12,8 +10,11 @@ class HospitalAdmissionFile {
     var bedNumber: Int              = 0
     var privateInsuranceNumber: Int = 0
 
-    @ManyToOne
-    var doctor: Doctor = Doctor()
+    constructor()
+    constructor(bedNumber: Int, privateInsNum: Int) {
+        this.bedNumber = bedNumber
+        this.privateInsuranceNumber = privateInsNum
+    }
 }
 
 @Entity
@@ -24,9 +25,9 @@ class DivisionAdmissionFile {
     var requestRationale: String    = ""
     var priority: Int               = 0
 
-    @ManyToOne
-    var doctor: Doctor = Doctor()
-
-    @ManyToOne
-    var division: Division = Division()
+    constructor()
+    constructor(rationale: String, priority: Int) {
+        this.requestRationale = rationale
+        this.priority = priority
+    }
 }

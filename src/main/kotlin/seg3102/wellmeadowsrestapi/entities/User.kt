@@ -17,30 +17,29 @@ open class User {
     open var email: String           = ""
     open var phoneNumber: String     = ""
 
-    constructor() {}
-    constructor(fName: String) { this.firstName = fName }
+    constructor()
+    constructor(fName: String, lName: String, pWord: String, email: String) {
+        this.firstName = fName
+        this.lastName = lName
+        this.password = pWord
+        this.email = email
+    }
 }
 
 @Entity
 class Doctor : User {
     var phoneExtension: String = ""
 
-    constructor() : super() {}
-    constructor(fName: String) : super(fName) {}
+    constructor() : super()
+    constructor(fName: String, lName: String, pWord: String, email: String, pExtension: String) :
+            super(fName, lName, pWord, email) {
+        this.phoneExtension = pExtension
+    }
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "doctor")
-    var hospitalAdmissionFiles: MutableList<HospitalAdmissionFile> = ArrayList()
-
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "doctor")
-    var divisionAdmissionFiles: MutableList<DivisionAdmissionFile> = ArrayList()
-
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "doctor")
+    @OneToMany(fetch = FetchType.LAZY)
     var patients: MutableList<Patient> = ArrayList()
 
-    @ManyToMany(cascade = [CascadeType.ALL],
-                fetch = FetchType.LAZY,
-                mappedBy = "doctors")
-    @JsonIgnoreProperties("doctors")
+    @OneToMany(fetch = FetchType.LAZY)
     var prescriptions: MutableList<Prescription> = ArrayList()
 }
 
@@ -48,11 +47,12 @@ class Doctor : User {
 class Nurse : User {
     var phoneExtension: String = ""
 
-    constructor() : super() {}
-    constructor(fName: String) : super(fName) {}
+    constructor() : super()
+    constructor(fName: String, lName: String, pWord: String, email: String, pExtension: String) : super(fName, lName, pWord, email) {
+        this.phoneExtension = pExtension
+    }
 
-    @OneToOne(optional = true)
-    @JoinColumn(name = "division_id")
-    @JsonManagedReference
+    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinColumn(name = "division_id", referencedColumnName = "divisionId")
     var division: Division = Division()
 }

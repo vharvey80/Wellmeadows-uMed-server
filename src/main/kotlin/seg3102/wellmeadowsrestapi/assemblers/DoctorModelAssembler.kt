@@ -1,39 +1,40 @@
 package seg3102.wellmeadowsrestapi.assemblers
 
-import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder
 import org.springframework.stereotype.Component
 
-import seg3102.wellmeadowsrestapi.entities.*
-import seg3102.wellmeadowsrestapi.controller.*
-import seg3102.wellmeadowsrestapi.representation.*
+import seg3102.wellmeadowsrestapi.entities.Doctor
+import seg3102.wellmeadowsrestapi.entities.Patient
+import seg3102.wellmeadowsrestapi.entities.Prescription
+import seg3102.wellmeadowsrestapi.controller.DoctorController
+import seg3102.wellmeadowsrestapi.controller.PatientController
+import seg3102.wellmeadowsrestapi.controller.PrescriptionController
+import seg3102.wellmeadowsrestapi.representation.DoctorRepresentation
+import seg3102.wellmeadowsrestapi.representation.PatientNameRepresentation
+import seg3102.wellmeadowsrestapi.representation.PrescriptionNameRepresentation
 import java.util.*
 
 @Component
-class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRepresentation>(ApiController::class.java, DoctorRepresentation::class.java) {
+class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRepresentation>(DoctorController::class.java, DoctorRepresentation::class.java) {
     override fun toModel(entity: Doctor): DoctorRepresentation {
         val doctorRepresentation = instantiateModel(entity)
         doctorRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(DoctorController::class.java)
                 .getDoctorById(entity.userId))
             .withSelfRel())
 
         doctorRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getPatientsById(entity.userId))
+            WebMvcLinkBuilder.methodOn(DoctorController::class.java)
+                .getDoctorPatientsById(entity.userId))
             .withRel("patients"))
 
         doctorRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFilesById(entity.userId))
-            .withRel("divisionFiles"))
+            WebMvcLinkBuilder.methodOn(DoctorController::class.java)
+                .getDoctorPrescriptionsById(entity.userId))
+            .withRel("prescriptions"))
 
-        doctorRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getHospitalFilesById(entity.userId))
-            .withRel("hospitalFiles"))
-
+        doctorRepresentation.patients = toPatientsRepresentation(entity.patients)
         doctorRepresentation.prescriptions = toPrescriptionsRepresentation(entity.prescriptions)
 
         doctorRepresentation.phoneExtension = entity.phoneExtension
@@ -46,20 +47,6 @@ class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRe
         doctorRepresentation.phoneNumber = entity.phoneNumber
 
         return doctorRepresentation
-    }
-
-    fun toDivisionFilesRepresentation(divisionFiles: List<DivisionAdmissionFile>): List<DivisionAdmissionFileRepresentation> {
-        return if (divisionFiles.isEmpty()) Collections.emptyList() else divisionFiles
-            .map{
-                divisionFileRepresentation(it)
-            }
-    }
-
-    fun toHospitalFilesRepresentation(hospitalFiles: List<HospitalAdmissionFile>): List<HospitalAdmissionFileRepresentation> {
-        return if (hospitalFiles.isEmpty()) Collections.emptyList() else hospitalFiles
-            .map{
-                hospitalFileRepresentation(it)
-            }
     }
 
     fun toPatientsRepresentation(patients: List<Patient>): List<PatientNameRepresentation> {
@@ -83,7 +70,7 @@ class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRe
         representation.lastName = patient.lastName
 
         return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(PatientController::class.java)
                 .getPatientById(patient.patientId))
             .withSelfRel())
     }
@@ -95,34 +82,8 @@ class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRe
         representation.startDate = prescription.startDate
 
         return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(PrescriptionController::class.java)
                 .getPrescriptionById(prescription.medicationId))
-            .withSelfRel())
-    }
-
-    private fun divisionFileRepresentation(divisionFile: DivisionAdmissionFile): DivisionAdmissionFileRepresentation {
-        val representation = DivisionAdmissionFileRepresentation()
-
-        representation.divisionFileId = divisionFile.divisionFileId
-        representation.requestRationale = divisionFile.requestRationale
-        representation.priority = divisionFile.priority
-
-        return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFilesById(divisionFile.divisionFileId))
-            .withSelfRel())
-    }
-
-    private fun hospitalFileRepresentation(hospitalFile: HospitalAdmissionFile): HospitalAdmissionFileRepresentation {
-        val representation = HospitalAdmissionFileRepresentation()
-
-        representation.hospitalFileId = hospitalFile.hospitalFileId
-        representation.privateInsuranceNumber = hospitalFile.privateInsuranceNumber
-        representation.bedNumber = hospitalFile.bedNumber
-
-        return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getHospitalFileById(hospitalFile.hospitalFileId))
             .withSelfRel())
     }
 }

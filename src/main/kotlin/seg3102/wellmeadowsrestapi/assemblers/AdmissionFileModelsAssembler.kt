@@ -7,27 +7,15 @@ import org.springframework.stereotype.Component
 import seg3102.wellmeadowsrestapi.entities.*
 import seg3102.wellmeadowsrestapi.controller.*
 import seg3102.wellmeadowsrestapi.representation.*
-import java.util.*
 
 @Component
-class DivisionAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<DivisionAdmissionFile, DivisionAdmissionFileRepresentation>(ApiController::class.java, DivisionAdmissionFileRepresentation::class.java) {
+class DivisionAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<DivisionAdmissionFile, DivisionAdmissionFileRepresentation>(DivisionAdmissionFileController::class.java, DivisionAdmissionFileRepresentation::class.java) {
     override fun toModel(entity: DivisionAdmissionFile): DivisionAdmissionFileRepresentation {
         val divisionFileRepresentation = instantiateModel(entity)
         divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFileById(entity.divisionFileId))
+            WebMvcLinkBuilder.methodOn(DivisionAdmissionFileController::class.java)
+                .getDivisionAdmissionFileById(entity.divisionFileId))
             .withSelfRel())
-
-
-        divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFileDoctorById(entity.divisionFileId))
-            .withRel("doctor"))
-
-        divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFileDivisionById(entity.divisionFileId))
-            .withRel("division"))
 
         divisionFileRepresentation.divisionFileId = entity.divisionFileId
         divisionFileRepresentation.requestRationale = entity.requestRationale
@@ -38,18 +26,13 @@ class DivisionAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<D
 }
 
 @Component
-class HospitalAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<HospitalAdmissionFile, HospitalAdmissionFileRepresentation>(ApiController::class.java, HospitalAdmissionFileRepresentation::class.java) {
+class HospitalAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<HospitalAdmissionFile, HospitalAdmissionFileRepresentation>(HospitalAdmissionFileController::class.java, HospitalAdmissionFileRepresentation::class.java) {
     override fun toModel(entity: HospitalAdmissionFile): HospitalAdmissionFileRepresentation {
         val hospitalFileRepresentation = instantiateModel(entity)
         hospitalFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getHospitalFileById(entity.hospitalFileId))
+            WebMvcLinkBuilder.methodOn(HospitalAdmissionFileController::class.java)
+                .getHospitalAdmissionFileById(entity.hospitalFileId))
             .withSelfRel())
-
-        hospitalFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getHospitalFileDoctorById(entity.hospitalFileId))
-            .withRel("doctor"))
 
         hospitalFileRepresentation.hospitalFileId = entity.hospitalFileId
         hospitalFileRepresentation.bedNumber = entity.bedNumber

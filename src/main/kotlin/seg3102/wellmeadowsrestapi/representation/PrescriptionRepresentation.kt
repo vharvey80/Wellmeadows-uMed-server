@@ -14,9 +14,6 @@ class PrescriptionRepresentation: RepresentationModel<PrescriptionRepresentation
     var unitsByDay: Int = 0
     var methodOfAdmin: String = ""
     var startDate: String = ""
-
-    var patients: List<PatientNameRepresentation> = ArrayList<PatientNameRepresentation>()
-    var doctors : List<UserNameRepresentation> = ArrayList<UserNameRepresentation>()
 }
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

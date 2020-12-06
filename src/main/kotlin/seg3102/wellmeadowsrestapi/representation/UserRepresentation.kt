@@ -20,8 +20,6 @@ open class UserRepresentation<T>: RepresentationModel<UserRepresentation<T>>() {
 class DoctorRepresentation: UserRepresentation<DoctorRepresentation>() {
     var phoneExtension: String = ""
 
-    var hospitalFiles: List<HospitalAdmissionFileRepresentation> = ArrayList<HospitalAdmissionFileRepresentation>()
-    var divisionFiles: List<DivisionAdmissionFileRepresentation> = ArrayList<DivisionAdmissionFileRepresentation>()
     var patients: List<PatientNameRepresentation> = ArrayList<PatientNameRepresentation>()
     var prescriptions: List<PrescriptionNameRepresentation> = ArrayList<PrescriptionNameRepresentation>()
 }
@@ -30,8 +28,6 @@ class DoctorRepresentation: UserRepresentation<DoctorRepresentation>() {
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class NurseRepresentation: UserRepresentation<NurseRepresentation>() {
     var phoneExtension: String = ""
-
-    var division: DivisionRepresentation = DivisionRepresentation()
 }
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
