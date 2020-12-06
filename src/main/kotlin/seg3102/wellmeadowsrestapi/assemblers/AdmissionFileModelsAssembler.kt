@@ -9,23 +9,13 @@ import seg3102.wellmeadowsrestapi.controller.*
 import seg3102.wellmeadowsrestapi.representation.*
 
 @Component
-class DivisionAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<DivisionAdmissionFile, DivisionAdmissionFileRepresentation>(ApiController::class.java, DivisionAdmissionFileRepresentation::class.java) {
+class DivisionAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<DivisionAdmissionFile, DivisionAdmissionFileRepresentation>(DivisionAdmissionFileController::class.java, DivisionAdmissionFileRepresentation::class.java) {
     override fun toModel(entity: DivisionAdmissionFile): DivisionAdmissionFileRepresentation {
         val divisionFileRepresentation = instantiateModel(entity)
         divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFileById(entity.divisionFileId))
+            WebMvcLinkBuilder.methodOn(DivisionAdmissionFileController::class.java)
+                .getDivisionAdmissionFileById(entity.divisionFileId))
             .withSelfRel())
-
-        /*divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionPatientsById(entity.divisionFileId))
-            .withRel("patient"))*/
-
-        /*divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFileDivisionById(entity.divisionFileId))
-            .withRel("division"))*/
 
         divisionFileRepresentation.divisionFileId = entity.divisionFileId
         divisionFileRepresentation.requestRationale = entity.requestRationale
@@ -36,18 +26,13 @@ class DivisionAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<D
 }
 
 @Component
-class HospitalAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<HospitalAdmissionFile, HospitalAdmissionFileRepresentation>(ApiController::class.java, HospitalAdmissionFileRepresentation::class.java) {
+class HospitalAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<HospitalAdmissionFile, HospitalAdmissionFileRepresentation>(HospitalAdmissionFileController::class.java, HospitalAdmissionFileRepresentation::class.java) {
     override fun toModel(entity: HospitalAdmissionFile): HospitalAdmissionFileRepresentation {
         val hospitalFileRepresentation = instantiateModel(entity)
         hospitalFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getHospitalFileById(entity.hospitalFileId))
+            WebMvcLinkBuilder.methodOn(HospitalAdmissionFileController::class.java)
+                .getHospitalAdmissionFileById(entity.hospitalFileId))
             .withSelfRel())
-
-        /*hospitalFileRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getHospitalFilePatientById(entity.hospitalFileId))
-            .withRel("patient"))*/
 
         hospitalFileRepresentation.hospitalFileId = entity.hospitalFileId
         hospitalFileRepresentation.bedNumber = entity.bedNumber
@@ -55,28 +40,4 @@ class HospitalAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<H
 
         return hospitalFileRepresentation
     }
-}
-
-private fun patientRepresentation(patient: Patient): PatientNameRepresentation {
-    val representation = PatientNameRepresentation()
-
-    representation.firstName = patient.firstName
-    representation.lastName = patient.lastName
-
-    return representation.add(WebMvcLinkBuilder.linkTo(
-        WebMvcLinkBuilder.methodOn(PatientController::class.java)
-            .getPatientById(patient.patientId))
-        .withSelfRel())
-}
-
-private fun divisionRepresentation(division: Division): DivisionNameRepresentation {
-    val representation = DivisionNameRepresentation()
-
-    representation.divisionName = division.divisionName
-    representation.location = division.location
-
-    return representation.add(WebMvcLinkBuilder.linkTo(
-        WebMvcLinkBuilder.methodOn(ApiController::class.java)
-            .getDivisionById(division.divisionId))
-        .withSelfRel())
 }

@@ -9,6 +9,7 @@ import java.util.*
 interface ContactService {
     fun addContact(contact: PatientContact): PatientContact
     fun deleteContact(id: Long)
+    fun deleteAllContacts()
     fun getContactById(id: Long): Optional<PatientContact>
     fun getContacts(): MutableIterable<PatientContact>?
     fun updateContact(id: Long, contact: PatientContact): PatientContact
@@ -23,6 +24,8 @@ class ContactServiceImp: ContactService {
     override fun addContact(contact: PatientContact): PatientContact = contactRepository.save(contact)
 
     override fun deleteContact(id: Long) = contactRepository.deleteById(id)
+
+    override fun deleteAllContacts() = contactRepository.deleteAll()
 
     override fun getContactById(id: Long): Optional<PatientContact> = contactRepository.findById(id)
 

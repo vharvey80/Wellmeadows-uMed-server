@@ -22,6 +22,7 @@ class PatientRepresentation: RepresentationModel<PatientRepresentation>() {
 @Relation(collectionRelation = "patientContacts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PatientContactRepresentation: RepresentationModel<PatientContactRepresentation>() {
+    var contactId: Long = 0
     var firstName: String = ""
     var lastName: String = ""
     var relationship: String = ""

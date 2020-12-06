@@ -1,41 +1,38 @@
 package seg3102.wellmeadowsrestapi.assemblers
 
-import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder
 import org.springframework.stereotype.Component
 
-import seg3102.wellmeadowsrestapi.entities.*
-import seg3102.wellmeadowsrestapi.controller.*
-import seg3102.wellmeadowsrestapi.representation.*
+import seg3102.wellmeadowsrestapi.entities.Division
+import seg3102.wellmeadowsrestapi.entities.DivisionAdmissionFile
+import seg3102.wellmeadowsrestapi.entities.Patient
+import seg3102.wellmeadowsrestapi.controller.DivisionController
+import seg3102.wellmeadowsrestapi.controller.PatientController
+import seg3102.wellmeadowsrestapi.controller.DivisionAdmissionFileController
+import seg3102.wellmeadowsrestapi.representation.DivisionRepresentation
+import seg3102.wellmeadowsrestapi.representation.PatientNameRepresentation
+import seg3102.wellmeadowsrestapi.representation.DivisionAdmissionFileRepresentation
 import java.util.*
 
 @Component
-class DivisionModelAssembler: RepresentationModelAssemblerSupport<Division, DivisionRepresentation>(ApiController::class.java, DivisionRepresentation::class.java) {
+class DivisionModelAssembler: RepresentationModelAssemblerSupport<Division, DivisionRepresentation>(DivisionController::class.java, DivisionRepresentation::class.java) {
     override fun toModel(entity: Division): DivisionRepresentation {
         val divisionRepresentation = instantiateModel(entity)
         divisionRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(DivisionController::class.java)
                 .getDivisionById(entity.divisionId))
             .withSelfRel())
 
         divisionRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(DivisionController::class.java)
                 .getDivisionPatientsById(entity.divisionId))
             .withRel("patients"))
 
         divisionRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(DivisionController::class.java)
                 .getDivisionAdmissionFilesById(entity.divisionId))
             .withRel("divisionAdmissionFiles"))
-
-        /*divisionRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionNurseById(entity.divisionId))
-            .withRel("nurse"))*/
-
-        divisionRepresentation.patients = toPatientsRepresentation(entity.patients)
-        divisionRepresentation.divisionFiles = toFilesRepresentation(entity.divisionAdmissionFiles)
 
         divisionRepresentation.divisionId = entity.divisionId
         divisionRepresentation.divisionName = entity.divisionName
@@ -61,18 +58,6 @@ class DivisionModelAssembler: RepresentationModelAssemblerSupport<Division, Divi
             }
     }
 
-    private fun nurseRepresentation(nurse: Nurse): UserNameRepresentation {
-        val representation = UserNameRepresentation()
-
-        representation.firstName = nurse.firstName
-        representation.lastName = nurse.lastName
-
-        return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getNurseById(nurse.userId))
-            .withSelfRel())
-    }
-
     private fun patientRepresentation(patient: Patient): PatientNameRepresentation {
         val representation = PatientNameRepresentation()
 
@@ -93,8 +78,8 @@ class DivisionModelAssembler: RepresentationModelAssemblerSupport<Division, Divi
         representation.requestRationale = file.requestRationale
 
         return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
-                .getDivisionFileById(file.divisionFileId))
+            WebMvcLinkBuilder.methodOn(DivisionAdmissionFileController::class.java)
+                .getDivisionAdmissionFileById(file.divisionFileId))
             .withSelfRel())
     }
 }
