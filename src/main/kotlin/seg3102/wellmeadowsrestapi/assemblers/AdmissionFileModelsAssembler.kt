@@ -17,18 +17,15 @@ class DivisionAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<D
                 .getDivisionFileById(entity.divisionFileId))
             .withSelfRel())
 
-        divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
+        /*divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getDivisionPatientsById(entity.divisionFileId))
-            .withRel("patient"))
+            .withRel("patient"))*/
 
-        divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
+        /*divisionFileRepresentation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getDivisionFileDivisionById(entity.divisionFileId))
-            .withRel("division"))
-
-        divisionFileRepresentation.patient = patientRepresentation(entity.patient!!)
-        divisionFileRepresentation.division = divisionRepresentation(entity.division)
+            .withRel("division"))*/
 
         divisionFileRepresentation.divisionFileId = entity.divisionFileId
         divisionFileRepresentation.requestRationale = entity.requestRationale
@@ -47,12 +44,10 @@ class HospitalAdmissionFileModelAssembler: RepresentationModelAssemblerSupport<H
                 .getHospitalFileById(entity.hospitalFileId))
             .withSelfRel())
 
-        hospitalFileRepresentation.add(WebMvcLinkBuilder.linkTo(
+        /*hospitalFileRepresentation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getHospitalFilePatientById(entity.hospitalFileId))
-            .withRel("patient"))
-
-        hospitalFileRepresentation.patient = patientRepresentation(entity.patient!!)
+            .withRel("patient"))*/
 
         hospitalFileRepresentation.hospitalFileId = entity.hospitalFileId
         hospitalFileRepresentation.bedNumber = entity.bedNumber
@@ -69,7 +64,7 @@ private fun patientRepresentation(patient: Patient): PatientNameRepresentation {
     representation.lastName = patient.lastName
 
     return representation.add(WebMvcLinkBuilder.linkTo(
-        WebMvcLinkBuilder.methodOn(ApiController::class.java)
+        WebMvcLinkBuilder.methodOn(PatientController::class.java)
             .getPatientById(patient.patientId))
         .withSelfRel())
 }

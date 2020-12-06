@@ -6,9 +6,11 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import seg3102.wellmeadowsrestapi.entities.*
 import seg3102.wellmeadowsrestapi.repository.*
+import seg3102.wellmeadowsrestapi.services.PatientServiceImp
 
 @SpringBootApplication
 class WellmeadowsRestApiApplication {
+
 	@Bean
 	fun init(patientRepo: PatientRepository,
 			 divisionRepo: DivisionRepository,
@@ -28,8 +30,8 @@ class WellmeadowsRestApiApplication {
 		val nurse1 = Nurse("Alysha", "Tucker", "atucker123", "atucker@domain.ca", "3456")
 		val nurse2 = Nurse("Tatiana", "Goodwin", "tgoodwin123", "tgoodwin@domain.ca", "4567")
 
-		val div1 = Division("Intensif Care", "Wing A", 25, "Empty", nurse1)
-		val div3 = Division("On-Call Room", "Wing C", 15, "Empty", nurse2)
+		val div1 = Division("Intensif Care", "Wing A", 25, "Empty")
+		val div3 = Division("On-Call Room", "Wing C", 15, "Empty")
 
 		val contact1 = PatientContact("Leonard", "Downes", "Brother")
 		val contact2 = PatientContact("Marshall", "Jackson", "Father")
@@ -52,12 +54,12 @@ class WellmeadowsRestApiApplication {
 		val presc2 = Prescription("Sleeping Aid", 1, "Drops")
 		val presc3 = Prescription("Insulin", 2, "Needles")
 
-		val patient1 = Patient("Vincent", "Harvey", "M", "1996-04-12", "Admitted", contact1)
-		val patient2 = Patient("Ginette", "Poulin", "F", "1992-05-09", "Admitted", contact2)
-		val patient3 = Patient("Robens", "Rodriguez", "M", "1989-10-21", "In Division", contact3)
-		val patient4 = Patient("Juanita", "Basil", "F", "2000-09-19", "Admitted", contact4)
-		val patient5 = Patient("Simon", "Vachon", "M", "1994-02-25", "In Division", contact5)
-		val patient6 = Patient("Cindy", "Tremblay", "F", "1973-01-30", "Admitted", contact6)
+		val patient1 = Patient("Vincent", "Harvey", "M", "1996-04-12", "Admitted")
+		val patient2 = Patient("Ginette", "Poulin", "F", "1992-05-09", "Admitted")
+		val patient3 = Patient("Robens", "Rodriguez", "M", "1989-10-21", "In Division")
+		val patient4 = Patient("Juanita", "Basil", "F", "2000-09-19", "Admitted")
+		val patient5 = Patient("Simon", "Vachon", "M", "1994-02-25", "In Division")
+		val patient6 = Patient("Cindy", "Tremblay", "F", "1973-01-30", "Admitted")
 	}
 }
 

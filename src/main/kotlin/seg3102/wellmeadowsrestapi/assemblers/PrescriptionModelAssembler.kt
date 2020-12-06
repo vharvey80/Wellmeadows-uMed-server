@@ -19,8 +19,8 @@ class PrescriptionModelAssembler: RepresentationModelAssemblerSupport<Prescripti
                 .getPrescriptionById(entity.medicationId))
             .withSelfRel())
 
-        prescriptionRepresentation.doctor = doctorRepresentation(entity.doctor)
-        prescriptionRepresentation.patient = patientRepresentation(entity.patient)
+        /*prescriptionRepresentation.doctor = doctorRepresentation(entity.doctor)
+        prescriptionRepresentation.patient = patientRepresentation(entity.patient)*/
 
         prescriptionRepresentation.medicationId = entity.medicationId
         prescriptionRepresentation.medicationName = entity.medicationName
@@ -38,7 +38,7 @@ class PrescriptionModelAssembler: RepresentationModelAssemblerSupport<Prescripti
         representation.lastName = patient.lastName
 
         return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(PatientController::class.java)
                 .getPatientById(patient.patientId))
             .withSelfRel())
     }

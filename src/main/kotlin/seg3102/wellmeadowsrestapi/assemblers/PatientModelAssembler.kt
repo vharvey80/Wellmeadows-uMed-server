@@ -15,7 +15,7 @@ class PatientModelAssembler: RepresentationModelAssemblerSupport<Patient, Patien
     override fun toModel(entity: Patient): PatientRepresentation {
         val patientRepresentation = instantiateModel(entity)
         patientRepresentation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(PatientController::class.java)
                 .getPatientById(entity.patientId))
             .withSelfRel())
 
@@ -44,14 +44,14 @@ class PatientModelAssembler: RepresentationModelAssemblerSupport<Patient, Patien
                 .getPatientDivisionById(entity.patientId))
             .withRel("division"))*/
 
-        patientRepresentation.patientContact = contactRepresentation(entity.patientContact)
+        /*patientRepresentation.patientContact = contactRepresentation(entity.patientContact)
         patientRepresentation.divisionFile = divisionFileRepresentation(entity.divisionAdmissionFile!!)
-        patientRepresentation.hospitalFile = hospitalFileRepresentation(entity.hospitalAdmissionFile!!)
+        patientRepresentation.hospitalFile = hospitalFileRepresentation(entity.hospitalAdmissionFile!!)*/
 
         //patientRepresentation.doctor = doctorRepresentation(entity.doctor)
         //patientRepresentation.division = divisionRepresentation(entity.division)
 
-        patientRepresentation.prescriptions = toPrescriptionsRepresentation(entity.prescriptions)
+        //patientRepresentation.prescriptions = toPrescriptionsRepresentation(entity.prescriptions)
 
         patientRepresentation.patientId = entity.patientId
         patientRepresentation.firstName = entity.firstName

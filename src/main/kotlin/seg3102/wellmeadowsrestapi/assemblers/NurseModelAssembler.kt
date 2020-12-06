@@ -25,8 +25,6 @@ class NurseModelAssembler: RepresentationModelAssemblerSupport<Nurse, NurseRepre
                 .getNurseDivisionById(entity.userId))
             .withRel("division"))
 
-        nurseRepresentation.division = entity.division?.let { divisionRepresentation(it) }!!
-
         nurseRepresentation.phoneExtension = entity.phoneExtension
 
         nurseRepresentation.userId = entity.userId

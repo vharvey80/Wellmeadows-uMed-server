@@ -29,12 +29,10 @@ class DivisionModelAssembler: RepresentationModelAssemblerSupport<Division, Divi
                 .getDivisionAdmissionFilesById(entity.divisionId))
             .withRel("divisionAdmissionFiles"))
 
-        divisionRepresentation.add(WebMvcLinkBuilder.linkTo(
+        /*divisionRepresentation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getDivisionNurseById(entity.divisionId))
-            .withRel("nurse"))
-
-        divisionRepresentation.chiefNurse = nurseRepresentation(entity.nurse!!)
+            .withRel("nurse"))*/
 
         divisionRepresentation.patients = toPatientsRepresentation(entity.patients)
         divisionRepresentation.divisionFiles = toFilesRepresentation(entity.divisionAdmissionFiles)
@@ -82,7 +80,7 @@ class DivisionModelAssembler: RepresentationModelAssemblerSupport<Division, Divi
         representation.lastName = patient.lastName
 
         return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(PatientController::class.java)
                 .getPatientById(patient.patientId))
             .withSelfRel())
     }

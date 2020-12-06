@@ -16,22 +16,17 @@ class Division {
     var phoneExtension: String  = ""
     var status: String          = ""
 
-    constructor() {}
-    constructor(name: String, location: String, numberOfBeds: Int, status: String, nurse: Nurse) {
+    constructor()
+    constructor(name: String, location: String, numberOfBeds: Int, status: String) {
         this.divisionName = name
         this.location = location
         this.numberOfBeds = numberOfBeds
         this.status = status
-
-        this.nurse = nurse
     }
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "division")
+    @OneToMany(fetch = FetchType.LAZY)
     var patients: MutableList<Patient> = ArrayList()
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "division")
+    @OneToMany(cascade = [CascadeType.ALL])
     var divisionAdmissionFiles: MutableList<DivisionAdmissionFile> = ArrayList()
-
-    @OneToOne(mappedBy = "division")
-    var nurse: Nurse? = Nurse()
 }

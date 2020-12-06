@@ -28,8 +28,6 @@ class DoctorRepresentation: UserRepresentation<DoctorRepresentation>() {
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class NurseRepresentation: UserRepresentation<NurseRepresentation>() {
     var phoneExtension: String = ""
-
-    var division: DivisionRepresentation = DivisionRepresentation()
 }
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

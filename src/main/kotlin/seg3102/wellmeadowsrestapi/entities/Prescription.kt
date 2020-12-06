@@ -7,9 +7,6 @@ import javax.persistence.*
 import javax.validation.constraints.*
 import javax.persistence.FetchType
 
-
-
-
 @Entity
 class Prescription {
     @Id
@@ -20,20 +17,11 @@ class Prescription {
     var methodOfAdmin: String   = ""
     var startDate: String       = ""
 
-    constructor() {}
+    constructor()
     constructor(name: String, unitsByDay: Int, method: String) {
         this.medicationName = name
         this.unitsByDay = unitsByDay
         this.methodOfAdmin = method
         this.startDate = LocalDateTime.now().toString()
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
-    var doctor: Doctor = Doctor()
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("patientId")
-    var patient: Patient = Patient()
-
 }

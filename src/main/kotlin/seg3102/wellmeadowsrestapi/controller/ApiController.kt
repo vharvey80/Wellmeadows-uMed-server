@@ -1,6 +1,7 @@
 package seg3102.wellmeadowsrestapi.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.CollectionModel
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -10,6 +11,7 @@ import seg3102.wellmeadowsrestapi.assemblers.*
 import seg3102.wellmeadowsrestapi.entities.*
 import seg3102.wellmeadowsrestapi.repository.*
 import seg3102.wellmeadowsrestapi.representation.*
+import seg3102.wellmeadowsrestapi.services.PatientServiceImp
 
 @RestController
 @CrossOrigin(origins = ["http://localhost:4200"])
@@ -30,6 +32,9 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
                     val nurseAssembler: NurseModelAssembler,
                     val divisionAssembler: DivisionModelAssembler,
                     val patientContactAssembler: PatientContactModelAssembler) {
+
+    @Autowired
+    val patientServices = PatientServiceImp()
 
     @Operation(summary = "Get a Doctor by id")
     @GetMapping("/doctors/{id}")
@@ -80,7 +85,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
     @GetMapping("/nurses/{id}/division")
     fun getNurseDivisionById(@PathVariable("id") id: Long): ResponseEntity<DivisionRepresentation> {
         return nurseRepository.findById(id)
-            .map { nurse: Nurse ->  divisionAssembler.toModel(nurse.division!!)}
+            .map { nurse: Nurse ->  divisionAssembler.toModel(nurse.division)}
             .map { body: DivisionRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
     }
@@ -98,7 +103,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
     @GetMapping("/patients/{id}/divisionFile")
     fun getPatientDivisionFileById(@PathVariable("id") id: Long): ResponseEntity<DivisionAdmissionFileRepresentation> {
         return patientRepository.findById(id)
-            .map { patient: Patient ->  divisionFileAssembler.toModel(patient.divisionAdmissionFile!!)}
+            .map { patient: Patient ->  divisionFileAssembler.toModel(patient.divisionAdmissionFile)}
             .map { body: DivisionAdmissionFileRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
     }
@@ -107,27 +112,9 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
     @GetMapping("/patients/{id}/hospitalFile")
     fun getPatientHospitalFileById(@PathVariable("id") id: Long): ResponseEntity<HospitalAdmissionFileRepresentation> {
         return patientRepository.findById(id)
-            .map { patient: Patient ->  hospitalFileAssembler.toModel(patient.hospitalAdmissionFile!!)}
+            .map { patient: Patient ->  hospitalFileAssembler.toModel(patient.hospitalAdmissionFile)}
             .map { body: HospitalAdmissionFileRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
-    }
-
-    @Operation(summary = "Get a Patients by id")
-    @GetMapping("/patients/{id}")
-    fun getPatientById(@PathVariable("id") id: Long): ResponseEntity<PatientRepresentation> {
-        return patientRepository.findById(id)
-            .map { entity: Patient -> patientAssembler.toModel(entity) }
-            .map { body: PatientRepresentation -> ResponseEntity.ok(body) }
-            .orElse(ResponseEntity.notFound().build())
-    }
-
-    @Operation(summary = "Get all Patients")
-    @GetMapping("/patients")
-    fun getPatients(): ResponseEntity<CollectionModel<PatientRepresentation>> {
-        val patients = patientRepository.findAll()
-        return ResponseEntity(
-            patientAssembler.toCollectionModel(patients),
-            HttpStatus.OK)
     }
 
     @Operation(summary = "Get all Prescriptions")
@@ -184,7 +171,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
             .orElse(ResponseEntity.notFound().build())
     }
 
-    @Operation(summary = "Get a Division File's Division by id")
+    /*@Operation(summary = "Get a Division File's Division by id")
     @GetMapping("/divisionFiles/{id}/division")
     fun getDivisionFileDivisionById(@PathVariable("id") id: Long): ResponseEntity<DivisionRepresentation> {
         return divisionFileRepository.findById(id)
@@ -200,7 +187,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
             .map { entity: Division -> nurseAssembler.toModel(entity.nurse!!) }
             .map { body: NurseRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
-    }
+    }*/
 
     @Operation(summary = "Get a Hospital File by id")
     @GetMapping("/hospital/files/{id}")
@@ -211,7 +198,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
             .orElse(ResponseEntity.notFound().build())
     }
 
-    @Operation(summary = "Get a Hospital File by id")
+    /*@Operation(summary = "Get a Hospital File by id")
     @GetMapping("/contact/{id}/patient")
     fun getContactPatientById(@PathVariable("id") id: Long): ResponseEntity<PatientRepresentation> {
         return contactRepository.findById(id)
@@ -227,7 +214,7 @@ class ApiController(val hospitalFileRepository: HospitalFileRepository,
             .map { entity: HospitalAdmissionFile -> patientAssembler.toModel(entity.patient!!) }
             .map { body: PatientRepresentation -> ResponseEntity.ok(body) }
             .orElse(ResponseEntity.notFound().build())
-    }
+    }*/
 
     @Operation(summary = "Get a Prescription by id")
     @GetMapping("/prescriptions/{id}")

@@ -65,7 +65,7 @@ class DoctorModelAssembler: RepresentationModelAssemblerSupport<Doctor, DoctorRe
         representation.lastName = patient.lastName
 
         return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(PatientController::class.java)
                 .getPatientById(patient.patientId))
             .withSelfRel())
     }

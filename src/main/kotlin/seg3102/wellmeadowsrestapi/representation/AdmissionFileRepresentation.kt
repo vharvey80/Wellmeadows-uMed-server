@@ -10,8 +10,6 @@ class HospitalAdmissionFileRepresentation: RepresentationModel<HospitalAdmission
     var hospitalFileId: Long = 0
     var bedNumber: Int = 0
     var privateInsuranceNumber: Int = 0
-
-    var patient: PatientNameRepresentation = PatientNameRepresentation()
 }
 
 @Relation(collectionRelation = "division_admission_files")
@@ -20,7 +18,4 @@ class DivisionAdmissionFileRepresentation: RepresentationModel<DivisionAdmission
     var divisionFileId: Long = 0
     var priority: Int = 0
     var requestRationale: String = ""
-
-    var patient: PatientNameRepresentation = PatientNameRepresentation()
-    var division: DivisionNameRepresentation = DivisionNameRepresentation()
 }

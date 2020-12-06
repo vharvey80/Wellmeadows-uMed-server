@@ -10,14 +10,11 @@ class HospitalAdmissionFile {
     var bedNumber: Int              = 0
     var privateInsuranceNumber: Int = 0
 
-    constructor() {}
+    constructor()
     constructor(bedNumber: Int, privateInsNum: Int) {
         this.bedNumber = bedNumber
         this.privateInsuranceNumber = privateInsNum
     }
-
-    @OneToOne(mappedBy = "hospitalAdmissionFile")
-    var patient: Patient? = null
 }
 
 @Entity
@@ -28,16 +25,9 @@ class DivisionAdmissionFile {
     var requestRationale: String    = ""
     var priority: Int               = 0
 
-    constructor() {}
+    constructor()
     constructor(rationale: String, priority: Int) {
         this.requestRationale = rationale
         this.priority = priority
     }
-
-    @OneToOne(mappedBy = "divisionAdmissionFile")
-    var patient: Patient? = null
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @MapsId("divisionId")
-    var division: Division = Division()
 }

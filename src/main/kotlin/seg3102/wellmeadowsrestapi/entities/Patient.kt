@@ -18,44 +18,39 @@ class Patient {
     var maritalStatus: String   = ""
 
     constructor()
-    constructor(fName: String, lName: String, gender: String, dateOfBirth: String, status: String, contact: PatientContact) {
+    constructor(fName: String, lName: String, gender: String, dateOfBirth: String, status: String) {
         this.firstName = fName
         this.lastName = lName
         this.dateOfBirth = dateOfBirth
         this.maritalStatus = status
         this.gender = gender
-
-        this.patientContact = contact
     }
 
-    @OneToOne(cascade = [CascadeType.ALL])
+    /** ONE TO ONE RELATIONSHIP **/
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contact_id", referencedColumnName = "contactId")
-    @JsonManagedReference
     var patientContact: PatientContact = PatientContact()
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "division_file_id", referencedColumnName = "divisionFileId")
-    @JsonManagedReference
-    var divisionAdmissionFile: DivisionAdmissionFile? = null
+    var divisionAdmissionFile: DivisionAdmissionFile = DivisionAdmissionFile()
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_file_id", referencedColumnName = "hospitalFileId")
-    @JsonManagedReference
-    var hospitalAdmissionFile: HospitalAdmissionFile? = null
+    var hospitalAdmissionFile: HospitalAdmissionFile = HospitalAdmissionFile()
 
-    @OneToMany(mappedBy = "patient")
+    /** ONE TO MANY RELATIONSHIP **/
+    @OneToMany(fetch = FetchType.LAZY)
     var prescriptions: MutableList<Prescription> = ArrayList()
 
-    @Nullable
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @MapsId("divisionId")
-    var division: Division? = null
+    /** MANY TO ONE RELATIONSHIP **/
+    /*@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "division_id")
+    var division: Division = Division()
 
-
-    @Nullable
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @MapsId("userId")
-    var doctor: Doctor = Doctor()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    var doctor: Doctor = Doctor()*/
 }
 
 @Entity
@@ -75,7 +70,4 @@ class PatientContact {
         this.lastName = lName
         this.relationship = rel
     }
-
-    @OneToOne
-    var patient: Patient? = null
 }

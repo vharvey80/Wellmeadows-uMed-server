@@ -21,12 +21,10 @@ class PatientContactModelAssembler: RepresentationModelAssemblerSupport<PatientC
                 .getPatientContactById(entity.contactId))
             .withSelfRel())
 
-        contactRepresentation.add(WebMvcLinkBuilder.linkTo(
+        /*contactRepresentation.add(WebMvcLinkBuilder.linkTo(
             WebMvcLinkBuilder.methodOn(ApiController::class.java)
                 .getContactPatientById(entity.contactId))
-            .withRel("patient"))
-
-        contactRepresentation.patient = patientRepresentation(entity.patient!!)
+            .withRel("patient"))*/
 
         contactRepresentation.firstName = entity.firstName
         contactRepresentation.lastName = entity.lastName
@@ -42,7 +40,7 @@ class PatientContactModelAssembler: RepresentationModelAssemblerSupport<PatientC
         representation.lastName = patient.firstName
 
         return representation.add(WebMvcLinkBuilder.linkTo(
-            WebMvcLinkBuilder.methodOn(ApiController::class.java)
+            WebMvcLinkBuilder.methodOn(PatientController::class.java)
                 .getPatientById(patient.patientId))
             .withSelfRel())
     }
